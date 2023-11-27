@@ -6,5 +6,9 @@
 *.gz
 *.xsim
 *.nii.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
 __*
 nilearn*
