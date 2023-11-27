@@ -1,0 +1,242 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath} %\mathcal
+\usepackage{amssymb} %\mathbb
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage[colorlinks=true, urlcolor=blue, linkcolor=red]{hyperref} % add hyperlinks; \href{URL}{TEXT}; \href{run:./sample.txt}{here} links to local files
+
+\newcommand{\sca}[2]{\left \langle #1 \middle| #2 \right \rangle} % inner product
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\RR}{\mathbb{R}} % espace réel
+\newcommand{\CC}{\mathbb{C}} % espace complexe
+\newcommand{\PP}{\mathbb{P}} % mesure de probabilité P
+\newcommand{\QQ}{\mathbb{Q}} % mesure de probabilité Q
+\newcommand{\EE}{\mathbb{E}} % espérance E
+\newcommand{\ZZ}{\mathbb{Z}} % mesure de probabilité Z
+\newcommand{\NN}{\mathbb{N}} % entiers positifs
+\newcommand{\G}{\mathcal{G}} % Graph G
+
+%------COLOR ---------
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\gray}[1]{\textcolor{gray}{#1}}
+%---------------------
+%	THEOREMS
+%---------------------
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{cost}{Cost function}
+\newtheorem{model}{Model}
+\newtheorem{assumption}{Assumption}
+
+% -------------
+%   BIBLIO
+% -------------
+\usepackage[
+style=phys,
+]
+{biblatex}
+\addbibresource{ref.bib}
+
+\title{Notes on the article : A Graph Signal Processing perspective on functional brain imaging}
+\author{Ines Vati}
+\date{2023–10–22}
+
+\begin{document}
+
+\maketitle
+
+\section{Expected project outcomes}
+\begin{itemize}
+    \item reading the paper, implement it in Python and launch experiments on real time series
+    \item report (~5 pages) + source code (jupyter notebook)
+    \item oral presentation 10 min
+\end{itemize}
+
+\blue{\subsection{TODO}}
+\textit{section to be modified}
+\blue{
+    \begin{itemize}
+        \item get familiar with pygsp : https://pygsp.readthedocs.io/en/stable/tutorials/intro.html
+        \item clean notebook 
+        \item push a notebook with the graph built on the BOLD5000 dataset
+        \item read paper about graph randomization : A Spectral Method for Generating Surrogate Graph Signals 
+    \end{itemize}
+}
+
+\gray{\subsection{What have been done so far ?}}
+\gray{
+    \begin{itemize}
+        \item tuto intro filtering pygsp https://pygsp.readthedocs.io/en/stable/tutorials/intro.html. This tuto illustrate the notion of graph fourier basis and graph filtering.
+        \item apply alignement and liberality filtering on BOLD5000
+    \end{itemize}
+}
+
+\section{Contributions}
+Functional graph (nodes associated to brain regions and edges to structural or functional connections ) are built based on functional connectivity, which is a pairwise measure of statistical interdependency between pairs of regional activity traces.
+This article is a review on GSP for brain imaging which aims at :
+\begin{itemize}
+    \item discuss their potential to integrate brain structure, contained in the graph itself, with brain function, residing in the graph signals
+    \item show how brain activity can be meaningfully filtered based on concepts of spectral modes derived from brain structure
+    \item how GSP tools can be applied to provide insights into the dynamics of functional brain activity.
+\end{itemize}
+
+The connectivity structure can be measured directly by counting fiber tracts in diffusion-weighted MRI or can be inferred from fMRI BOLD measurements. \\ 
+
+They introduce some graph signal operations :
+\begin{itemize}
+    \item filtering
+    \item randomization preserving anatomical smoothness
+    \item localized decompositions
+\end{itemize}
+
+\section{Section II: Brain graphs and brain signals}
+\textbf{contruction of a graph from structural connectivity and considering brain activity as graph signal}
+
+A weighted graph $\mathcal{G} = (\mathcal{V}, A)$ where $\mathcal{V}={1, \dots, N}$ is a set of $N$ nodes associated with specific brain regions and $A\in \RR^{N\times N}_+$ is a weighted adjacency matrix with entries 
+$A_{i,j}$ representing the strength of physical connection between brain regions $i$ and $j$.
+In other words, $A_{i,j}$ corresponds to the strength of axonal connection measured by a simple count of the number of streamlines (estimated individual fibers) that connect the regions, estimated with diffusion spectrum imaging (DSI).
+$x\in \RR^N$ is acquired brain activity signals such that the value of $i$th component $x_i$ quantify neural activity in brain region $i$.
+
+\section{Section III: GSP for Neuroimaging}
+\textbf{derive the graph spectral domain by the eigendecomposition of a graph shift operator}. 
+Such eigenmodes provide robust representation of the connectome in health and disease.
+\begin{itemize}
+    \item Graph laplacian : $L = D - A$
+    \item Symmetric Normalized Graph Laplacian : $L_{sym} = D^{-1/2}LD^{-1/2}$
+    \item Random-walk graph laplacian : $L_{rw} = D^{-1}L$
+    \item Graph shift operator (assuming henceforth that $S$ is diagonalizable) $S=V\Lambda V^{-1}$ where $\Lambda$ is a diagonal matrix containing the eigenvalues $\lambda_k$ \\
+            get a transformation that characterizes exchanges between neighboring nodes.\\
+            using adjacency matrix $A$ as shift vector vs using graph laplacian 
+\end{itemize}
+Several well known signal processing problem ($V$ for graph Laplacian as a shift operator is a common solution)
+\begin{itemize}
+    \item Laplacian embedding : find a mapping of graph nodes on a line so that connected nodes stay as close as possible
+    \item Graph cut problem : partitio a graph with subcommities of nodes with as few cross-connection as possible
+\end{itemize}
+
+\subsection{Graph Fourier transform}
+    \begin{definition}{Graph Fourier Transform}
+        Consider a signal $x\RR^N$ and a graph shift operator $S=V\Lambda V^{-1}\in \RR^{N\times N}$. Then, $\tilde{x} = V^Tx$ and $x = V\tilde{x}$ form a GFT pair.
+    \end{definition}
+    \blue{A GFT is equivalent to DFT for cyclic graphs.}
+
+\subsection{Graph signal filtering}
+    We define diagonal filtering matrix $G$, where $[G]_i=g(\lambda_i)$ is the frequency response for the graph frequency associated with $\lambda_i$,
+    and retrieve the filtered signal as $Y_G= VGV^{-1}X$.\\ 
+    \textit{e. g.} ideal low-pass frequency : $g(\lambda_i)=1$ for $\lambda_i$ corresponding to low frequencies and $g(\lambda_i)=0$ otherwise. \\ 
+
+    Filters are usually defined in the spectral domain. 
+
+
+\subsection{Generation of graph surrogate signal}
+    \textbf{We want to assess significance of obtained results throught statistical testing} (invalidate the null hypothesis). \\ 
+    \textit{e. g.} we want to test if the observed signal is significantly different from a random signal\footnote{Parametric test like t-test. Nonparametric tests like permutation test (=re-randomization ou shuffle test) : The null hypothesis is that all samples come from the same distribution $H_{0}:F=G$. Under the null hypothesis, the distribution of the test statistic is obtained by calculating all possible values of the test statistic under possible rearrangements of the observed data.}.
+    We want to preserve the structure of the graph while randomizing the signal.\\
+    For correlated data, the \red{Fourier phase randomization procedure} $Y = XF^H\phi_{time}F$ where $\phi_{time}$ contains random phase factors. In the graph setting, this procedure can be generalized $Y=V\phi_{graph}V^TX$ where $\phi_{graph}$ is a diagonal matrix containing random phase factors (random sign flips of the graph spectral coefficients).\\
+    The surrogate signal $Y$ is a random signal with the same power spectrum as $X$ but with randomized phase and the nonstationary spatial effects are destroyed.\\
+    
+    They applied the method developped in \cite{pirondini_spectral_2016} to compute excursions. 
+
+    Dans le contexte du traitement du signal et de l'analyse de séries temporelles, la méthode de \textit{randomization} de phase implique la création d'un jeu de données de "substitution" ou \textit{surrogate data} à partir d'une série temporelle donnée. Les \textit{surrogate data} servent de base nulle ou de référence par rapport à laquelle les propriétés statistiques de la série d'origine peuvent être comparées. Le but de générer des données préservant certaines propriétés de la série temporelle comme son spectre/power spectrum density ou son autocovariance
+    tout en randomisant d'autres aspects. Plus précisément, dans le processus de randomisation de phase, les ensembles de données de substitution sont créés en randomisant les phases de la série temporelle originale tout en maintenant inchangées les amplitudes des composantes de Fourier. Ce processus perturbe les relations temporelles et les motifs dans les données tout en préservant le spectre de puissance global.\\
+    Cette méthode est souvent utilisée dans le cadre de tests d'hypothèses sur la structure non aléatoire ou les composantes oscillatoires présentes dans une série temporelle. En comparant les mesures statistiques ou les caractéristiques des données d'origine à celles des données de substitution, on peut évaluer si les motifs observés sont statistiquement significatifs ou simplement dues au hasard. Par exemple, cette technique est utilisée en neurosciences pour 
+    évaluer la signification des oscillations neuronales observées ou des motifs de synchronisation entre les neurones.\\
+
+    De même que pour la méthode classique où les amplitudes des coefficients de la transformée de Fourier sont conservées dans les données de substitution, aprés avoir transformé le signal du graphe dans le domaine spectrale de fourier, ils effectuent une randomisation en permutant ou en générant aléatoirement le signe des coefficients de Fourier $\tilde{x} = V^Tx$.
+\subsection{Wavelets and Slepians on graph}
+    \begin{itemize}
+        \item Wavelets : a function $\psi\in L^2(\RR)$ is an orthonormal wavelet if it can be used to define a Hilbert basis, that is complete and orthonormal system for the Hilbert space $L^2(\RR)$
+        \item Slepians functions:  a set of orthogonal functions that are maximally concentrated in a given frequency band. They are commonly used in spectral analysis and as window functions for reducing spectral leakage \footnote{Spectral leakage means that the energy from one frequency component can "leak" into adjacent frequency bins, making it challenging to accurately identify frequencies.} and improving frequency resolution
+    \end{itemize}
+    a localized decomposition for graph signals that is based on a generalization of Slepians functions: \\
+    $\rightarrow$ problem of retrieving a signal $x\in\RR^N$ that is maximally concentrated within a subset of nodes. As the global concentration of a signal is given by $x^Tx$, we end up maximizing : $\mu$
+
+
+
+\section{Section IV: application to the context of attention task}
+\textbf{Tp study the association between brain signal and attention switching}, they decomposed the functional brain response into two components : 
+\begin{itemize}
+    \item one that represents alignment with structural connectivity (regions that activate together are also physically wired)
+    \item one that describes liberality (areas that exhibits high signal variability)
+\end{itemize}
+\begin{enumerate}
+    \item graph signal filtering with two different filtering matrices \\
+            $\psi_{Al}$ : low pass filtering for alignment; so that $Y_{\phi_{Al}} = V\psi_{Al}V^TX$ is the transformed functional data in which only the then lowest frequency modes are expressed \\
+            $\psi_{Li}$ : high-pass filtering; for liberality, only the ten highest frequency modes \\ 
+            to derive a subject-specific alignment and liberality concentration, they compute the norms of the filtered signal, averaged across all temporal samples of a given subject. 
+    \item derive subject-specific alignment or liberality (a scalar) : average norm of filtered signal across all temporal samples
+    \item relate signal alignment and liberality to cognitive performance of each subject : \\
+            they compute the partial Pearson's correlation between their concentration measures and "switch cost" (response time during switching task blocks compared to non-switching task blocks) \\ 
+            age, gender, and motion were included as covariate to remove their impact from the results  
+\end{enumerate}
+
+\section{Section V: Perspectives }
+\textbf{excursions} : popular moments in time when entering a regime of strong alignment, or liberality, with the underlying brain structure. 
+\begin{enumerate}
+    \item resolving excursions in alignment and liberality regimes 
+                \begin{enumerate}
+                \item Graph surrogate method : generate 1000 null signal matrices using graph domain randomization $\rightarrow$ operator $\phi_{graph}$
+                \item combined with filtering operations to generate null data for aligned and liberal signal components $Y=V\phi_{graph}\phi_{Al}V^TX$ and $Y= $ respectively 
+                \item threshold the filtered signal, at an $\alpha$-level of $5$\% to locate significant signal excursions
+                \item other approach with classical Fourier phase randomization procedure
+            \end{enumerate}
+    \item combining graph excursion with Fourier analysis
+    \item probing excursion with a subgraph using Slepians
+\end{enumerate}
+
+
+\section{Ideas / Remarks }
+data ? https://bold5000-dataset.github.io/website/index.html \\ 
+% Data de BOLD5000 fMRI dataset while viewing 5000 images ; for all dataset 122Go (2h de download): https://figshare.com/articles/dataset/BOLD5000\_Release\_2\_0/14456124 \\
+download only data from \href{https://openneuro.org/datasets/ds001499/versions/1.3.0}{Openneuro} for at least 2 participants. \\ 
+
+Experiment : \\
+
+\begin{itemize}
+    \item 4 subjects named CSI1, CSI2, CSI3, CSI4
+    \item Functional task data acquisition 15 sessions : 
+        \begin{itemize}
+            \item 9 or 10 functional scans of slow event-related 5000 scene data (labeled 5000scenes) runs were acquired during the same scanning sessions
+            \item 0 or 1 functional localizer scans used to define scene selective regions (labeled localizer)
+            \item each event.json file lists each stimulus, the onset time, and the participant’s response (participants performed a simple valence task)
+        \end{itemize}
+    \item Anatomical data acquisition session: 16 Anatomical Data: T1 weighted MPRAGE scan, a T2 weighted SPACE, diffusion spectrum imaging
+\end{itemize}
+Pre-processing : fMRIprep: Preprocessed data for all functional data of CSI1 through CSI4 (In the derivatives folder)
+\begin{itemize}
+    \item preprocessed both in T1w image space and on surface space. Functional data was motion corrected, susceptibility distortion corrected, and aligned to the anatomical data using bbregister.
+    \item refer to the paper for the details on preprocessing.
+    \item Reports resulting from fMRI prep, which include the success of anatomical alignment and distortion correction, among other measures of preprocessing success are all listed in the sub-CSIX.html files.
+\end{itemize}
+All MRI and fMRI data provided is with Siemens pre-scan normalization filter.
+
+
+use nilearn to create functional connectome : % https://nilearn.github.io/dev/connectivity/functional_connectomes.html#probabilistic-atlases 
+
+\section{Understand the data}
+\subsection{What is fMRI ?}
+Functional magnetic resonance imaging (fMRI) is based on the fact that when local neural activity increases, increases in metabolism and blood flow lead to fluctuations of the relative concentrations of oxyhaemoglobin (the red cells in the blood that carry oxygen) and deoxyhaemoglobin (the same red cells after they have delivered the oxygen). 
+Oxyhaemoglobin and deoxyhaemoglobin have different magnetic properties (diamagnetic and paramagnetic, respectively), and they affect the local magnetic field in different ways.
+To record cerebral activity during functional sessions, the scanner is tuned to detect this "Blood Oxygen Level Dependent" (BOLD) signal. \\ 
+
+Brain activity is measured in sessions that span several minutes, during which the participant performs some cognitive task and the scanner acquires brain images, typically every 2 or 3 seconds (the time between two successive image acquisition is called the Repetition time, or TR). \\ 
+
+Before fMRI images can be used to do meaningful comparisons, they must be processed to ensure that the voxels that are being compared represent the same brain regions, irrespective of the variability in size and shape of the brain and its microarchitecture across different subjects in the experiment. The process is called spatial registration or spatial normalization. During this procedure, the voxels of all the brain images are ‘registered’ to correspond to the same region of the brain. Usually, the images are registered to a standard ‘template’ brain image.
+Once this is done, the coordinate of a voxel are in the same space as the template. nilearn package does not perform spatial preprocessing; it only does statistical analyses on the voxel time series. For preprocessing functions, users are referred to Nipype or \href{https://fmriprep.org/en/stable/}{fMRIPrep}. 
+
+\subsection{BOLD5000 dataset}
+
+
+Spatial normalization to the ICBM 152 Nonlinear Asymmetrical template version 2009c was performed. 
+
+\printbibliography
+
+\end{document}
