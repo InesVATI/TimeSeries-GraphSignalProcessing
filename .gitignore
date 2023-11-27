@@ -5,3 +5,6 @@
 *.out
 *.gz
 *.xsim
+*.nii.gz
+__*
+nilearn*
