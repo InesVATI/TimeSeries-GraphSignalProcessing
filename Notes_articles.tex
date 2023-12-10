@@ -151,7 +151,10 @@ Several well known signal processing problem ($V$ for graph Laplacian as a shift
     évaluer la signification des oscillations neuronales observées ou des motifs de synchronisation entre les neurones.\\
 
     De même que pour la méthode classique où les amplitudes des coefficients de la transformée de Fourier sont conservées dans les données de substitution, aprés avoir transformé le signal du graphe dans le domaine spectrale de fourier, ils effectuent une randomisation en permutant ou en générant aléatoirement le signe des coefficients de Fourier $\tilde{x} = V^Tx$.
-\subsection{Wavelets and Slepians on graph}
+    A surrogate graph signal is then obtained by the inverse graph fourier transform of those realisations. The flip sign randomization preserve the amplitude of the graph fourier transform coefficients and thus imposes the surrogate's autocorrelation to be the same.
+
+
+    \subsection{Wavelets and Slepians on graph}
     \begin{itemize}
         \item Wavelets : a function $\psi\in L^2(\RR)$ is an orthonormal wavelet if it can be used to define a Hilbert basis, that is complete and orthonormal system for the Hilbert space $L^2(\RR)$
         \item Slepians functions:  a set of orthogonal functions that are maximally concentrated in a given frequency band. They are commonly used in spectral analysis and as window functions for reducing spectral leakage \footnote{Spectral leakage means that the energy from one frequency component can "leak" into adjacent frequency bins, making it challenging to accurately identify frequencies.} and improving frequency resolution
@@ -176,6 +179,8 @@ Several well known signal processing problem ($V$ for graph Laplacian as a shift
     \item relate signal alignment and liberality to cognitive performance of each subject : \\
             they compute the partial Pearson's correlation between their concentration measures and "switch cost" (response time during switching task blocks compared to non-switching task blocks) \\ 
             age, gender, and motion were included as covariate to remove their impact from the results  
+    \item examiner l'importance de l'association entre les signaux liberaux (liberal signals) et le \textit{switch cost}, ils effectuent un test de permutation nulle en générant des signaux de substitution de graphes.  
+            They generates 100 graph surrogate signals and evaluates the correlation between the surrogate signals and the switch cost. They found that the correlation between the surrogate signals and the switch cost was significantly lower than the correlation between the liberal signal concentration.
 \end{enumerate}
 
 \section{Section V: Perspectives }
@@ -194,6 +199,7 @@ Several well known signal processing problem ($V$ for graph Laplacian as a shift
 
 
 \section{Ideas / Remarks }
+"histogram" des valeurs propres 
 data ? https://bold5000-dataset.github.io/website/index.html \\ 
 % Data de BOLD5000 fMRI dataset while viewing 5000 images ; for all dataset 122Go (2h de download): https://figshare.com/articles/dataset/BOLD5000\_Release\_2\_0/14456124 \\
 download only data from \href{https://openneuro.org/datasets/ds001499/versions/1.3.0}{Openneuro} for at least 2 participants. \\ 
