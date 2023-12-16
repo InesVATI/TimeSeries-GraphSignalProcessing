@@ -1,6 +1,12 @@
 \documentclass[11pt]{article}
 \usepackage{theme}
 \usepackage{shortcuts}
+\usepackage[
+style=phys,
+]
+{biblatex}
+\addbibresource{ref.bib}
+
 % Document parameters
 % Document title
 \title{Mini-Project (ML for Time Series) - MVA 2023/2024}
@@ -51,10 +57,17 @@ The Introduction section (indicative length : less than 1 page) should detail th
 
 The Method section (indicative length : 1 to 2 pages) should describe the mathematical aspects of the method in a summarized manner. Only the main steps that are useful for understanding should be highlighted. If relevant, some details on implementation can be provided (but only marginally).
 
-\section{Data}
-The Data section (indicative length : 1 page) should provide a deep analysis of the data used for experiment. In particular, we are interested here in your capacity to provide relevant and thoughtful feedbacks on the data and to demonstrate that you master some "data diagnosis" tools that have been dealt with in the lectures/tutorials.
+\input{content/data.tex}
+
+
 
 \section{Results}
 The Result section (indicative length : 1 to 2 pages) should display numerical simulations on real data. If you re-used some existing implementations, it is expected that this section develops new experiments that were not present in the original article. Results should be discussed not only based on quantative scores but also on qualitative aspects. In particular (especially if your article focuses on black box methods), please provide some feedbacks whether the method was adapted to the data or not and whether the hypothesis behind the approach you used were validated or not.
+
+\printbibliography
+\clearpage
+\appendix
+\appendixpage % ajoute par defaut le titre "Appendices" au dessus de la première annexe
+
 
 \end{document}

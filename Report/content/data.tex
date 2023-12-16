@@ -1,0 +1,30 @@
+\section{Data}
+\textit{The Data section (indicative length : 1 page) should provide a deep analysis of the data used for experiment. In particular, we are interested here in your capacity to provide relevant and thoughtful feedbacks on the data and to demonstrate that you master some "data diagnosis" tools that have been dealt with in the lectures/tutorials.}
+
+
+
+\subsection{BOLD5000 dataset}
+
+For this project, we worked on the BOLD5000 database\cite{chang_bold5000_2019}. It is a large-scale, slow-event related fMRI dataset that contains brain scans of four patients viewing more than 5,000 images from three computer vision datasets\footnote{The database is publicly available on the OpenNeuro platform \url{https://openneuro.org/datasets/ds001499/versions/1.3.0}}. The dataset covers a wide range of visual features, categories, and semantics, and can be used to test various hypotheses and models of visual cognition. 
+
+Functional magnetic resonance imaging (fMRI) is based on the fact that when local neural activity increases, increases in metabolism and blood flow lead to fluctuations of the relative concentrations of oxyhaemoglobin\footnote{Oxyhaemoglobin are the red cells in the blood that carry oxygen} and deoxyhaemoglobin, the same red cells after they have delivered the oxygen. \\
+Oxyhaemoglobin and deoxyhaemoglobin have different magnetic properties\footnote{diamagnetic and paramagnetic, respectively}, and they affect the local magnetic field in different ways.\\
+To record cerebral activity during functional sessions, the scanner is tuned to detect this "Blood Oxygen Level Dependent" (BOLD) signal. 
+
+Brain activity is measured in sessions that span several minutes, during which the participant visualize different images. For each stimulus image shown, each participant performed a valence judgment task, responding with how much they liked the image using the metric : "like", "neutral" or "dislike".\\
+We had access to a csv file containing the numeric response of each participant for each image. However, the correspondance between numeric labels (1, 2 or 3) and the words labels were not provided. We had to manually deduce the correspondance between the two.\blue{Do i need to develop ?}
+
+
+Once this is done, the coordinate of a voxel are in the same space as the template. nilearn package does not perform spatial preprocessing; it only does statistical analyses on the voxel time series. For preprocessing functions, users are referred to Nipype or \href{https://fmriprep.org/en/stable/}{fMRIPrep}. 
+
+\subsection{Time series extraction and diagnosis}
+
+Confounds are variables that can affect the brain signal and are not of interest in the study. They can include head motion, physiological noise, and scanner artifacts.
+
+In order to extract signals from brain regions, it is important to remove the effects of confounds from the data. This is done by regressing out the confounds from the data before extracting the signals. The extracted signals can then be used to compute a correlation matrix between the regions.
+
+It is important to define good confounds signals for accurate results. For instance, movement regressors, white matter and cerebrospinal fluid signals are commonly used as confounds.
+
+Nilearn is a Python library that provides tools for neuroimaging data analysis. It has a function called nilearn.signal.clean that can be used to remove confounds from the data
+
+\subsection{Brain Graph Construction}
