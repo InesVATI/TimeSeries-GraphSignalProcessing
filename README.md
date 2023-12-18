@@ -7,10 +7,9 @@ Student project the following article *A Graph Signal Processing Perspective on 
     - [Mathis Reymond](https://github.com/Mathisnplus1)
     - [Ines Vati](https://github.com/InesVATI)
 
-## Expected project outcomes
-- reading the paper, implement it in Python and launch experiments on real time series
-- report (~5 pages) + source code (jupyter notebook)
-- 10-minute oral presentation 
+## Project outcomes
+The source code of the experiments is given in the folder ``Code``. 
+```Report``` is a latex folder containing the report of the project.
 
 # References
 
