@@ -1,0 +1,41 @@
+\section{Method}
+
+% \blue{The Method section (indicative length : 1 to 2 pages) should describe the mathematical aspects of the method in a summarized manner. Only the main steps that are useful for understanding should be highlighted. If relevant, some details on implementation can be provided (but only marginally).}
+
+We consider a weighted graph $\G = (\V, S)$ where $\V$ is the set of $N$ vertices associated with specific brain regions and $S\in\RR^{N\times N}$ is a matrix connectivity representation (usually the adjacency matrix or Laplacian). We also consider a graph signal $X\in\RR^{N\times T}$ where $T$ is the length of the time series. 
+
+\subsection{Graph Fourier Transform}
+
+In order to define a Fourier transform on $\G$, one must diagonalize this $S$ and express it in the form
+\begin{align}
+    S = V\Lambda V^{-1}
+\end{align}
+where $\Lambda$ is a diagonal matrix containing the eigenvalues of $S$, and $V$ is a matrix of associated eigenvectors. This allows the definition, given a signal $x$ on $\G$, of the graph Fourier transform of $x$ on $\G$ as
+\begin{equation}
+    \widetilde{x} := V^Tx \label{eq:GFT}
+\end{equation}
+Please refer to the appendix \ref{app:fourier_t} for the computations that draw parallels with the discrete Fourier transform on temporal data.
+
+\subsection{Graph filtering}
+In the context of graph signal processing, filters are commonly defined within the spectral domain. Let $h$ be a transfer function, and we denote $H$ as the diagonal matrix where $H_{ii} = h(\lambda_i)$, and $\lambda_i$ denotes the eigenvalues of $S$. The filtered signal $Y_h\in \RR^{N\times T}$ is defined as follows 
+\begin{equation}
+    Y_h := VHV^TX
+\end{equation}
+In this formulation, filtering is applied independently to each time sample $x[t]$. However, unlike traditional time-domain filtering, graph filtering leverages the graph structure to smooth the signal across its edges rather than along the time axis. This distinction becomes obvious when visualizing the impact of graph filtering on a signal. Figure \ref{fig:visu_filt_signal} illustrates the differences in the same signal, either filtered with a low-pass filter or a high-pass filter. Colour values on the low-pass filtered signal exhibit greater homogeneity across nodes than on the high-pass filter one. 
+
+\subsection{Generation of graph surrogate signals}
+
+Statistical testing is crucial when it comes to make inferences about the properties of signals. For example, we may want to test whether the observed signal is significantly different from a random signal. 
+Phase-randomization in the temporal Fourier domain \cite{theiler_testing_1992} offers to preserve the spectral properties of the time series while randomizing the signal. It consists in generating surrogate data from an original time series by randomizing the phases of the original time series while keeping the magnitudes of the Fourier components unchanged. The surrogate signal is given by $Y = XF^H\phi_{time}F$, where $\phi_{time}$ contains random phase factors, $F$ and $F^T$ indicate the temporal Fourier Transform and Inverse Fourier Transform, respectively. \\
+We can extend this procedure to the graph framework : $Y=V\phi_{graph}V^TX$ where $\phi_{graph}$ is a diagonal matrix containing random phase factors. $\phi_{graph}$ can be defined by random sign flips of the graph spectral coefficients. An explanatory scheme is provided in Figure \ref{surr_scheme}. 
+% The obtained surrogate signal $Y$ is a random signal with the same power spectrum as $X$ but with randomized phase and the non-stationary spatial effects are destroyed.
+
+
+In \cite{huang_graph_2018}, one of the objectives is to discern significant signal excursions, which are distinct moments in time when brain activity enters a regime of strong alignment or liberality. \\
+In the context of the authors' study, alignment and liberality are concepts used to characterize different aspects of functional brain activity. Alignment is associated with regions of the brain that activate simultaneously. On the other hand, liberality pertains to areas that exhibit high signal variability, suggesting a more diverse and dynamic pattern of activity. Alignment is computed using a low-pass filter on the graph because low-pass filters allow the preservation of lower-frequency components while attenuating higher-frequency variations. Liberality, conversely, is computed using a high-pass filter on the graph that emphasizes higher-frequency variations. The authors employed the following procedure to compute excursions in those different regimes :
+\begin{enumerate}
+    \item capture alignment and liberality with low-pass and high-pass filters on the original signal
+    \item generate 1,000 null surrogate signals for each filtered signal, as performed in \cite{pirondini_spectral_2016}
+    \item employ the generated null data to threshold the filtered signals at a $\alpha$-level of 5\%
+\end{enumerate}
+

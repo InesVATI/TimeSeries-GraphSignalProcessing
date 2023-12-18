@@ -1,0 +1,42 @@
+\section{Results}
+% \blue{The Result section (indicative length : 1 to 2 pages) should display numerical simulations on real data. If you re-used some existing implementations, it is expected that this section develops new experiments that were not present in the original article. Results should be discussed not only based on quantative scores but also on qualitative aspects. In particular (especially if your article focuses on black box methods), please provide some feedbacks whether the method was adapted to the data or not and whether the hypothesis behind the approach you used were validated or not.}
+
+\subsection{Extract excursions in alignment and liberality regimes}
+\label{excursion_results}
+
+In this section, we investigate the following questions : (i) In our setting with only 10 regions, can we exhibit regions with frequent moments of strong alignment and liberality ? (ii) Does the choice of low-pass or high-pass filter influence the percentage of significant excursions ? (iii) What do we obtain if we apply the conventional phase Fourier randomization ?
+
+Mirroring the approach of the authors \cite{huang_graph_2018}, we propose a non-parametric, model-free statistical test for identifying unexpected fluctuations in time series magnitude over time. 
+We compute the average of the (temporal) 95\% percentile on the surrogate signals, as illustrated in Figure \ref{fig:statistic_surr}. The obtained value is used to threshold the "true" time series. The time points that exceed this threshold are said to be significant excursions.
+The protocol is repeated for all the $20$ runs and statistical results are plotted in Figure \ref{fig:result_excursions_filters}. \\ 
+The authors  chose the 12\% smallest and largest eigenvalues for the alignment and liberality filters, respectively. It comes down to almost 2 eigenvalues for our graph. 
+We implement the equivalent version of the filters and two other continuous filters that are displayed in Figure \ref{fig:filt}. The continuous low-pass filter is defined by $h_{low,\ continuous}(x) = \frac{1}{1 + \tau x}$ with $\tau = 3$ and the continuous high-pass filter is given by $ h_{high,\ continuous}(x) = \frac{2}{1 + \exp(-\tau (x - r) ) }$ with $\tau = 1$ and $r = 5$.
+% \begin{align}
+%     h_{low,\ continuous}(x) &= \frac{1}{1 + \tau x} \label{filt_low_cont} \\
+%     h_{high,\ continuous}(x) &= \frac{2}{1 + \exp(-\tau (x - r) ) } \label{filt_high_cont}
+% \end{align}
+
+The study by Huang et \textit{al.} \cite{huang_graph_2018} focused on $87$ brain regions, in contrast to our dataset with only $10$ regions. Consequently, it is unsurprising that we do not replicate their reported percentage of excursions. Our findings, depicted in Figure \ref{fig:result_excursions_filters}, reveal two key observations: (i) the inability to identify regions with a high percentage of excursions, attributed to the limited number of studied regions; and (ii) the similarity in results between continuous and non-continuous low-pass filters. However, for high-pass filters, certain regions, such as the left hemisphere lateral occipital cortex (LHLOC) and the retrosplenial complex (RSC), do not have the same percentage of excursions and the same variability. This discrepancy may be attributed to the high-pass continuous filter accepting more eigenvalues than its non-continuous counterpart,  as illustrated in Figure \ref{fig:filt}. Notably, the majority of eigenvalues surpass $3$. Thus, the continuous low-pass filter select a sufficient number of low eigenvalues compare to the non-continuous low-pass filter, which is not replicated by the continuous high-pass filter.\\
+Moreover, (iii) Figure \ref{fig:result_Fourier_excursions} indicates that performing a statistical test with the conventional randomization do not exhibit differences between the brain regions. This outcome is anticipated, given that the phase randomization matrix $\phi$ is uniformly applied to the nodes of the graph in the same manner. However, the article \cite{huang_graph_2018} reported that alignment excursions persist when employing conventional randomization.
+% The persistence of alignment excursions under this randomization method suggests that there are spatial dynamics in the brain's functional activity that are non-random and may be associated with specific functional connections among brain regions. 
+We can argue that our inability to replicate these results stems from the limited availability of labelled brain regions in our dataset.
+
+\subsection{Utilizing Neural Correlates to Predict Subjective Experience of Visual Stimuli}\label{subsec:classification_results}
+
+In this experiment, we aim to employ GSP tools to predict the subjective preference of pictures. Specifically, using the BOLD5000 brain images, our objective is to predict categorical labels : 1, 2, or 3. In order to avoid subtleties caused by inter-subject studies, we confine this experiment to data acquired solely during the initial 6 runs of the first session of subject CSI1.
+
+We compute 6 matrices sized (10, 194) corresponding to the activation levels of the 10 brain regions across the 194 time points. This process enables the computation of a connectivity matrix for each of the 6 runs, where connectivity is derived as the average connectivity across the 194 time points. To create a unified representation, we compute the average connectivity matrix from the set of 6 connectivity matrices, which allows defining a brain graph based on this final averaged matrix. We perform diagonalization of the Laplacian matrix associated to this graph, enabling for graph Fourier transform. Given the graph's 10 vertices, for each of the $6\times194$ time points, we compute the graph Fourier transform of the activation across the 10 brain regions projected on the graph. This process yields $6\times194$ samples, each comprising 10 features: the Fourier coefficients.
+
+Using the Sklearn, we train both a simple Multi-Layer Perceptron and a Gradient Boosting Tree. Training involves 80\% of the vectors made of the squared Fourier coefficients. Then, we evaluate the models' performance on the remaining 20\% of the data. Regrettably, we do not observe any improvements in balanced accuracy as compared to random classification. However, as this approach breaks down the temporal continuity by considering individual vectors without accounting for the fact that the complete response pattern for each image spans 4 to 5 time points, it was expected to obtain poor results.
+
+That's why, ultimately, we tried to perform dictionary learning, with the aim to extract specific patterns for each appreciation. Unfortunately, as the patterns we are looking for are 4 to 5 time points long, dictionary learning is not very suited to extract them. 
+
+\subsection{Subjective Experience Prediction with K-Nearest Neighbors and Distance Time Warping}
+
+We refer to a "sub-sequence" as the segment within the time series when the patient is observing a single image. Those sub-sequences last approximately $10$ seconds and have a temporal length of 4 to 6 time points. \\ 
+In this section, our objective is to classify these sub-sequences using a k-Nearest Neighbors (K-NN) algorithm. Let's index the sub-sequences with $I$ and for any $i\in I$, let's denote the temporal lengths of the sub-sequence $i$ with $T_i$. Consider $X_i\in\RR^{N\times T_i}$ and $X_j\in\RR^{N\times T_j}$ as two sub-sequences. They may have different temporal lengths. Recall that $N$ is the number of brain regions. We define the distance between $X$ and $Y$ as
+$$
+d(X_i, X_j) = \frac{1}{N}\sum_{n=1}^N DTW(X_i[n], X_j[n])
+$$
+where $DTW$ is the Distance Time Warping (DTW) measure. \\
+Using Scikit-learn, we implemented a cross-validation to compare results across various number of neighbors. The balanced accuracies are depicted in Figure \ref{knn_5_fold}. The only model surpassing the chance level is the one with $k=3$ neighbors, displaying a median accuracy of $40$\%. However, the variability remains substantial. This may be explained by the relatively short length of the sub-sequences. Furthermore, caution is advised when independently comparing sub-sequences from different runs.

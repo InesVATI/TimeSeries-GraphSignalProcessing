@@ -1,0 +1,64 @@
+%% Side bar
+\setbeamertemplate{sidebar canvas left}
+{%
+  \vspace*{0.95cm}\hspace*{0pt}%
+  {\input{template/graphics/sidebar}}%
+}
+
+
+%% Footer
+\defbeamertemplate*{footline}{infolines theme}
+{
+	\begin{textblock*}{10cm}(0cm,-0.1cm)
+		\input{template/graphics/footbar}
+	\end{textblock*}
+	\begin{textblock*}{10cm}(10.9cm,-.35cm)
+		\includegraphics[width=1.8cm, keepaspectratio=true]{\masterlogo}
+		\end{textblock*}
+	\begin{textblock*}{1.4cm}(0cm,-0.06cm)
+		\begin{beamercolorbox}[wd=1.4cm,ht=5pt,left]{title in head/foot}%
+            \centering
+			\color{framenb@footer} 
+			\textbf{\insertframenumber/\inserttotalframenumber}
+		\end{beamercolorbox}
+	\end{textblock*}
+	\begin{textblock*}{1.9cm}(1.5cm,-0.06cm)
+		\begin{beamercolorbox}[wd=1.9cm,ht=5pt,right]{title in head/foot}%
+            \centering
+			\color{date@footer} 
+			\textbf{\insertdate}
+		\end{beamercolorbox}
+	\end{textblock*}
+ 	\begin{textblock*}{7.15cm}(3.5cm,-0.06cm)
+		\begin{beamercolorbox}[wd=7.15cm,ht=5pt,left]{title in head/foot}%
+            \centering
+			\color{section@hf} 
+			\textbf{\insertsectionhead}
+		\end{beamercolorbox}
+	\end{textblock*}
+	
+
+\begin{beamercolorbox}[wd=.05\paperwidth,ht=2.25ex,right]{title in head/foot}%
+	  ~
+\end{beamercolorbox}
+  \vskip2pt%
+}
+
+
+%% Frame title
+
+\defbeamertemplate*{frametitle}{tp theme}
+{
+  \leavevmode%
+  \vspace{0.60cm}
+  \hbox{%
+	  \hspace{1.75cm}
+	  \begin{beamercolorbox}[wd=.86\paperwidth,dp=1ex,left, ignorebg]{frametitle}%
+		  \usebeamerfont{frametitle}%
+		  \color{titlepage@fg}%
+		  \vspace{4mm}%
+		  \strut{\bf \insertframetitle}\strut%
+		  \vspace{-2mm}%
+	  \end{beamercolorbox}%
+  }%
+}

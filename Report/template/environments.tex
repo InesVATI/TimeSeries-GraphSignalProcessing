@@ -1,0 +1,108 @@
+%% Environments
+\newenvironment{thm}[1]
+{
+\begin{tcolorbox}[colback = thm@colback, colframe = thm@colframe, coltext = thm@coltext,  breakable,
+coltitle = thm@coltitle, title = Theorem#1]
+}
+{
+\end{tcolorbox}
+}
+\newenvironment{prob}
+{
+\begin{tcolorbox}[colback = ex@colback, colframe = ex@colframe, coltext = ex@coltext,  breakable,
+coltitle = ex@coltitle, title = Problem]
+}
+{
+\end{tcolorbox}
+}
+\newenvironment{prop}
+{
+\begin{tcolorbox}[colback = prop@colback, colframe = prop@colframe, coltext = prop@coltext,  breakable,
+coltitle = prop@coltitle, title = Property]
+}
+{
+\end{tcolorbox}
+}
+\newenvironment{lemm}
+{
+\begin{tcolorbox}[colback = prop@colback, colframe = prop@colframe, coltext = prop@coltext,  breakable,
+coltitle = prop@coltitle, title = Lemma]
+}
+{
+\end{tcolorbox}
+}
+\newenvironment{Def}
+{
+\begin{tcolorbox}[colback = def@colback, colframe = def@colframe, coltext = def@coltext, coltitle = def@coltitle, breakable, title = Definition]
+}
+{
+\end{tcolorbox}
+}
+
+\newenvironment{Pf}
+{
+\begin{tcolorbox}[colback = proof@colback, colframe = proof@colframe, coltext = proof@coltext,  breakable,
+coltitle = proof@coltitle, title = Proof]
+}
+{
+\begin{flushright}
+$\square$
+\end{flushright}
+\end{tcolorbox}
+}
+
+\newenvironment{Ex}
+{
+\begin{tcolorbox}[colback = ex@colback, colframe = ex@colframe, coltext = ex@coltext, coltitle = ex@coltitle,  breakable,
+title = Examples]
+}
+{
+\end{tcolorbox}
+}
+
+\newenvironment{Exo}
+{
+\begin{tcolorbox}[colback = exo@colback, colframe = exo@colframe, coltext = exo@coltext, coltitle = exo@coltitle,  breakable,
+title = Exercises]
+}
+{
+\end{tcolorbox}
+}
+
+\newenvironment{Sol}
+{
+\begin{tcolorbox}[top = 0mm, bottom = 1mm, toprule = -1mm, bottomrule = -1mm, rightrule = -1mm, sharp corners = all, colback = sol@colback, colframe = sol@colframe, coltext = sol@coltext, breakable, fontupper = \large]
+}
+{
+\end{tcolorbox}
+}
+
+\newenvironment{remarks}
+{
+\begin{tcolorbox}[colback = remarks@colback, colframe = remarks@colframe, coltext=remarks@coltext, coltitle = remarks@coltitle,  breakable,
+title = Remarks]
+\begin{enumerate}
+}
+{
+\end{enumerate}
+\end{tcolorbox}
+}
+
+
+\newenvironment{algo}[1]
+{
+\begin{tcolorbox}[colback = algo@colback, colframe = algo@colframe, coltext = algo@coltext,  breakable,
+coltitle = algo@coltitle, title = Algorithm: #1]
+}
+{
+\end{tcolorbox}
+}
+
+\newenvironment{textbox}
+{
+\begin{tcolorbox}[standard jigsaw, opacityback = 0,
+opacityframe = 0, coltext = text@fg]
+}
+{
+\end{tcolorbox}
+}
