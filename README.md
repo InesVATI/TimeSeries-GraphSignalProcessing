@@ -8,8 +8,9 @@ Student project the following article *A Graph Signal Processing Perspective on 
     - [Ines Vati](https://github.com/InesVATI)
 
 ## Project outcomes
-The source code of the experiments is given in the folder ``Code``. 
-```Report``` is a latex folder containing the report of the project.
+- The source code of the experiments is given in the folder ``Code``. 
+- ```Report``` is a latex folder containing the report of the project.
+- The ``Results`` folder houses the outcomes of the excursions experiments in the form of ".pkl" files.
 
 # References
 
